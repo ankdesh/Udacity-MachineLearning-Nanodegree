@@ -109,32 +109,25 @@ def run():
     """Run the agent for a finite number of trials."""
 
     allStats = {}
-    for i in range(0,11):
-        for j in range(0,11):
-            alpha = i / 10.0
-            gamma = j / 10.0
     
-            # Set up environment and agent
-            stat = Stats()
-            e = Environment()  # create environment (also adds some dummy traffic)
-            a = e.create_agent(LearningAgent)  # create agent
-            e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
-            # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
+    # Set up environment and agent
+    stat = Stats()
+    e = Environment()  # create environment (also adds some dummy traffic)
+    a = e.create_agent(LearningAgent)  # create agent
+    e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
+    # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
 
-            a.set_stats(stat)
-            a.set_alpha_gamma(alpha, gamma)
+    a.set_stats(stat)
   
-            # Now simulate it
-            sim = Simulator(e, update_delay=0.1, display=False)  # create simulator (uses pygame when display=True, if available)
-            # NOTE: To speed up simulation, reduce update_delay and/or set display=False
+    # Now simulate it
+    sim = Simulator(e, update_delay=0.1, display=False)  # create simulator (uses pygame when display=True, if available)
+    # NOTE: To speed up simulation, reduce update_delay and/or set display=False
 
-            sim.run(n_trials=100)  # run for a specified number of trials
-            # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
-          
-            allStats[(i,j)] = stat
-
-    with open('results.pickle','wb') as f:
-        pickle.dump(allStats, f)
+    sim.run(n_trials=100)  # run for a specified number of trials
+    # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
+    
+    with open('qlearning_policy_learning.pickle','wb') as f:
+        pickle.dump(stat, f)
   
 if __name__ == '__main__':
     run()
