@@ -2,6 +2,8 @@ import random
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
+  
+import cPickle as pickle
 
 class QMap (object):
     def __init__ (self):
@@ -31,6 +33,22 @@ class QMap (object):
         maxActions = [action for action in actions if self.getQValue(state,action) == maxVal] # Find all pairs in case of draw
         return random.choice(maxActions)
 
+class Stats(object):
+    def __init__(self):
+        self.stats = [] # Keeps all stats for each episode
+        self.cntNegreward = 0    # Number of negative rewards (bad driving) in this trial
+        self.lastDeadLineVal = 0 # Value of the deadline last time the agent was run. 1 means agent did not meet deadline
+
+    def reset(self):
+        self.stats.append((self.lastDeadLineVal, self.cntNegreward))
+        self.cntNegreward = 0
+        self.lastDeadLineVal = 0
+
+    #def dump(self, fileName):
+    #    with open(fileName,'wb') as f:
+    #        pickle.dump(stats, f)
+
+
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
 
@@ -43,9 +61,17 @@ class LearningAgent(Agent):
         self.alpha = 0.1
         self.gamma = 0.9
     
+    def set_stats(self, stats):
+        self.stats = stats
+
+    def set_alpha_gamma(self, alpha, gamma):
+        self.alpha = alpha
+        self.gamma = gamma
+    
     def reset(self, destination=None):
         self.planner.route_to(destination)
         # TODO: Prepare for a new trip; reset any variables here, if required
+        self.stats.reset()
 
     def update(self, t):
         # Gather inputs
@@ -63,6 +89,11 @@ class LearningAgent(Agent):
 
         # Execute action and get reward
         reward = self.env.act(self, action)
+        
+        # Update stats
+        self.stats.lastDeadLineVal  = deadline
+        if reward == -1:
+            self.stats.cntNegreward += 1
 
         # TODO: Learn policy based on state, action, reward
         nextInputs = self.env.sense(self)
@@ -77,19 +108,33 @@ class LearningAgent(Agent):
 def run():
     """Run the agent for a finite number of trials."""
 
-    # Set up environment and agent
-    e = Environment()  # create environment (also adds some dummy traffic)
-    a = e.create_agent(LearningAgent)  # create agent
-    e.set_primary_agent(a, enforce_deadline=False)  # specify agent to track
-    # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
+    allStats = {}
+    for i in range(0,11):
+        for j in range(0,11):
+            alpha = i / 10.0
+            gamma = j / 10.0
+    
+            # Set up environment and agent
+            stat = Stats()
+            e = Environment()  # create environment (also adds some dummy traffic)
+            a = e.create_agent(LearningAgent)  # create agent
+            e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
+            # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
 
-    # Now simulate it
-    sim = Simulator(e, update_delay=0.5, display=True)  # create simulator (uses pygame when display=True, if available)
-    # NOTE: To speed up simulation, reduce update_delay and/or set display=False
+            a.set_stats(stat)
+            a.set_alpha_gamma(alpha, gamma)
+  
+            # Now simulate it
+            sim = Simulator(e, update_delay=0.1, display=False)  # create simulator (uses pygame when display=True, if available)
+            # NOTE: To speed up simulation, reduce update_delay and/or set display=False
 
-    sim.run(n_trials=100)  # run for a specified number of trials
-    # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
+            sim.run(n_trials=100)  # run for a specified number of trials
+            # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
+          
+            allStats[(i,j)] = stat
 
-
+    with open('results.pickle','wb') as f:
+        pickle.dump(allStats, f)
+  
 if __name__ == '__main__':
     run()
