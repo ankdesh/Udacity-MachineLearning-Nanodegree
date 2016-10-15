@@ -55,7 +55,7 @@ class LearningAgent(Agent):
         # TODO: Initialize any additional variables here
         self.qMap = QMap()
         self.alpha = 0.1
-        self.gamma = 0.9
+        self.gamma = 0.8
     
     def set_stats(self, stats):
         self.stats = stats
