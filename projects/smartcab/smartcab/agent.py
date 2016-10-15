@@ -44,10 +44,6 @@ class Stats(object):
         self.cntNegreward = 0
         self.lastDeadLineVal = 0
 
-    #def dump(self, fileName):
-    #    with open(fileName,'wb') as f:
-    #        pickle.dump(stats, f)
-
 
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
@@ -80,7 +76,7 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # TODO: Update state
-        self.state = (self.next_waypoint,inputs['light'], inputs['oncoming'])
+        self.state = (self.next_waypoint,inputs['light'], inputs['oncoming'], inputs['left'])
         
         # TODO: Select action according to your policy
         #action = random.choice([None, 'forward', 'left', 'right'])
@@ -97,13 +93,13 @@ class LearningAgent(Agent):
 
         # TODO: Learn policy based on state, action, reward
         nextInputs = self.env.sense(self)
-        nextState = (self.next_waypoint, nextInputs['light'], nextInputs['oncoming']) 
+        nextWaypoint = self.planner.next_waypoint()
+        nextState = (nextWaypoint, nextInputs['light'], nextInputs['oncoming']) 
         qValNew = (1 - self.alpha) * self.qMap.getQValue(self.state, action) +\
                         self.alpha * (reward + self.gamma * self.qMap.getMaxQVal(nextState))
         self.qMap.setQValue(self.state, action, qValNew)
 
         #print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, nextInput = {} reward = {}, nextwaypoint = {}".format(deadline, inputs, action, nextState, reward, self.next_waypoint)  # [debug]
-        #print self.qMap.qmap
 
 def run():
     """Run the agent for a finite number of trials."""
