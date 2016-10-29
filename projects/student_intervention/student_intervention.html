@@ -226,7 +226,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Import libraries</span>
@@ -238,6 +238,8 @@ div#notebook {
 <span class="c"># Read student data</span>
 <span class="n">student_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">&quot;student-data.csv&quot;</span><span class="p">)</span>
 <span class="k">print</span> <span class="s">&quot;Student data read successfully!&quot;</span>
+
+<span class="n">rand_seed</span> <span class="o">=</span> <span class="mi">25</span> <span class="c"># To be used throughout the notebook</span>
 </pre></div>
 
 </div>
@@ -278,7 +280,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># TODO: Calculate number of students</span>
@@ -341,7 +343,7 @@ Graduation rate of the class: 67.09%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Extract feature columns</span>
@@ -423,7 +425,7 @@ Feature values:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="k">def</span> <span class="nf">preprocess_features</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -494,7 +496,7 @@ Feature values:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># TODO: Import any additional functionality you may need here</span>
@@ -511,7 +513,7 @@ Feature values:
 <span class="c">#X_test = None</span>
 <span class="c">#y_train = None</span>
 <span class="c">#y_test = None</span>
-<span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="p">)</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span><span class="n">y_all</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="n">num_train</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="p">)</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span><span class="n">y_all</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="n">num_train</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="n">rand_seed</span><span class="p">)</span>
 
 <span class="c"># Show the results of the split</span>
 <span class="k">print</span> <span class="s">&quot;Training set has {} samples.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -594,13 +596,19 @@ Testing set has 95 samples.
 <li>Reason for picking GB for this problem is that the dataset is small and hence overfitting and large time to construct is of lesser issue than getting good result. GB have shown to outperform other ensemble methods.</li>
 </ul>
 <h5 id="3.-K-nearest-neighbours">3. K-nearest neighbours<a class="anchor-link" href="#3.-K-nearest-neighbours">&#182;</a></h5><ul>
-<li></li>
+<li>KNN is used commonly in recommender systems and is even used in face recognition systems[6]. It is also used in computaional genetic applications [7]</li>
+<li>KNN does not have a preprocessing step of "training" before making predictions. This is specifically useful when the data is large and prediction is required for small set of values. Its quite resilient to noise.[8]</li>
+<li>Performance of KNN and its computational cost is dependent on the hyperparameter k. Its very important to get appropriate value to get better results (changing K can change predicted class for a point). Another decision is to define the distance function between different data points in dataset.</li>
+<li>Based on the results of plotting various attributes vs each other (Experiments.ipynp), the classes seemed to have big local clusters separable by non-linear boundaries. I suspect local information for predicting class will give good results here.</li>
 </ul>
 <p>[1] <a href="http://nlp.stanford.edu/IR-book/html/htmledition/naive-bayes-text-classification-1.html">http://nlp.stanford.edu/IR-book/html/htmledition/naive-bayes-text-classification-1.html</a></p>
 <p>[2] <a href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier">https://en.wikipedia.org/wiki/Naive_Bayes_classifier</a></p>
 <p>[3] <a href="https://en.wikipedia.org/wiki/Gradient_boosting#Usage">https://en.wikipedia.org/wiki/Gradient_boosting#Usage</a></p>
 <p>[4] <a href="https://databricks.com/blog/2015/01/21/random-forests-and-boosting-in-mllib.html">https://databricks.com/blog/2015/01/21/random-forests-and-boosting-in-mllib.html</a></p>
 <p>[5] <a href="https://www.quora.com/When-would-one-use-Random-Forests-over-Gradient-Boosted-Machines-GBMs/answer/Tianqi-Chen-1?srid=OqDt">https://www.quora.com/When-would-one-use-Random-Forests-over-Gradient-Boosted-Machines-GBMs/answer/Tianqi-Chen-1?srid=OqDt</a></p>
+<p>[6] <a href="https://www.quora.com/What-are-industry-applications-of-the-K-nearest-neighbor-algorithm/answer/Chris-McCormick-12?srid=OqDt">https://www.quora.com/What-are-industry-applications-of-the-K-nearest-neighbor-algorithm/answer/Chris-McCormick-12?srid=OqDt</a></p>
+<p>[7] <a href="https://saravananthirumuruganathan.wordpress.com/2010/05/17/a-detailed-introduction-to-k-nearest-neighbor-knn-algorithm/">https://saravananthirumuruganathan.wordpress.com/2010/05/17/a-detailed-introduction-to-k-nearest-neighbor-knn-algorithm/</a></p>
+<p>[8] <a href="http://people.revoledu.com/kardi/tutorial/KNN/Strength%20and%20Weakness.htm">http://people.revoledu.com/kardi/tutorial/KNN/Strength%20and%20Weakness.htm</a></p>
 
 </div>
 </div>
@@ -625,7 +633,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="k">def</span> <span class="nf">train_classifier</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
@@ -698,7 +706,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># TODO: Import the three supervised learning models from sklearn</span>
@@ -742,59 +750,59 @@ Testing set has 95 samples.
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Training a GaussianNB using a training set size of 100. . .
-Trained model in 0.0319 seconds
-Made predictions in 0.0018 seconds.
-F1 score for training set: 0.8550.
-Made predictions in 0.0018 seconds.
-F1 score for test set: 0.7481.
+Trained model in 0.0148 seconds
+Made predictions in 0.0632 seconds.
+F1 score for training set: 0.3333.
+Made predictions in 0.0012 seconds.
+F1 score for test set: 0.1176.
 Training a GaussianNB using a training set size of 200. . .
-Trained model in 0.0032 seconds
-Made predictions in 0.0014 seconds.
-F1 score for training set: 0.8321.
-Made predictions in 0.0012 seconds.
-F1 score for test set: 0.7132.
-Training a GaussianNB using a training set size of 300. . .
 Trained model in 0.0034 seconds
-Made predictions in 0.0017 seconds.
-F1 score for training set: 0.8088.
+Made predictions in 0.0018 seconds.
+F1 score for training set: 0.8339.
 Made predictions in 0.0010 seconds.
-F1 score for test set: 0.7500.
+F1 score for test set: 0.7692.
+Training a GaussianNB using a training set size of 300. . .
+Trained model in 0.0027 seconds
+Made predictions in 0.0016 seconds.
+F1 score for training set: 0.8066.
+Made predictions in 0.0011 seconds.
+F1 score for test set: 0.7402.
 Training a GradientBoostingClassifier using a training set size of 100. . .
-Trained model in 0.2326 seconds
-Made predictions in 0.0012 seconds.
+Trained model in 0.2583 seconds
+Made predictions in 0.0011 seconds.
 F1 score for training set: 1.0000.
-Made predictions in 0.0011 seconds.
-F1 score for test set: 0.7519.
-Training a GradientBoostingClassifier using a training set size of 200. . .
-Trained model in 0.2300 seconds
-Made predictions in 0.0017 seconds.
-F1 score for training set: 0.9852.
 Made predictions in 0.0010 seconds.
-F1 score for test set: 0.7879.
-Training a GradientBoostingClassifier using a training set size of 300. . .
-Trained model in 0.3081 seconds
-Made predictions in 0.0022 seconds.
-F1 score for training set: 0.9740.
+F1 score for test set: 0.7176.
+Training a GradientBoostingClassifier using a training set size of 200. . .
+Trained model in 0.2137 seconds
+Made predictions in 0.0016 seconds.
+F1 score for training set: 0.9926.
 Made predictions in 0.0011 seconds.
-F1 score for test set: 0.7669.
+F1 score for test set: 0.6825.
+Training a GradientBoostingClassifier using a training set size of 300. . .
+Trained model in 0.2560 seconds
+Made predictions in 0.0020 seconds.
+F1 score for training set: 0.9810.
+Made predictions in 0.0010 seconds.
+F1 score for test set: 0.7132.
 Training a KNeighborsClassifier using a training set size of 100. . .
-Trained model in 0.0018 seconds
-Made predictions in 0.0033 seconds.
-F1 score for training set: 0.7972.
-Made predictions in 0.0033 seconds.
-F1 score for test set: 0.7068.
+Trained model in 0.0016 seconds
+Made predictions in 0.0046 seconds.
+F1 score for training set: 0.8075.
+Made predictions in 0.0030 seconds.
+F1 score for test set: 0.7194.
 Training a KNeighborsClassifier using a training set size of 200. . .
-Trained model in 0.0021 seconds
-Made predictions in 0.0084 seconds.
-F1 score for training set: 0.8571.
-Made predictions in 0.0042 seconds.
-F1 score for test set: 0.7121.
+Trained model in 0.0023 seconds
+Made predictions in 0.0090 seconds.
+F1 score for training set: 0.8212.
+Made predictions in 0.0040 seconds.
+F1 score for test set: 0.7259.
 Training a KNeighborsClassifier using a training set size of 300. . .
-Trained model in 0.0018 seconds
-Made predictions in 0.0166 seconds.
-F1 score for training set: 0.8722.
-Made predictions in 0.0064 seconds.
-F1 score for test set: 0.7482.
+Trained model in 0.0020 seconds
+Made predictions in 0.0152 seconds.
+F1 score for training set: 0.8667.
+Made predictions in 0.0057 seconds.
+F1 score for test set: 0.7576.
 </pre>
 </div>
 </div>
@@ -973,9 +981,11 @@ F1 score for test set: 0.7482.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong>
-K Nearest Neighbour works as model by dividing the input data points into k different sets. The assignment of a data point to a particular set is based on the distance of the data point from the centroid of all the data points already present in the set.</p>
-<h4 id="Training">Training<a class="anchor-link" href="#Training">&#182;</a></h4><p>Training consists of a initial phase of setting up parameters. The most important parameter for the model is how many sets we want the dataset to be divided into. We call this parameter as k. Then each data point is randomly assigned one of k sets. Then, iteratively, we move the datapoints to appropriate set based on the distances between the datapoint and a representative point of each set.</p>
-<h4 id="Prediction">Prediction<a class="anchor-link" href="#Prediction">&#182;</a></h4><p>To assign a set to new data point, we calculate the distance of the data point to the representative point of each set. Then the set with min distance is chosen.</p>
+In summary, K Nearest Neighbour works by looking at k data points which are nearest and assign the class of most occuring class in the chosen data points.</p>
+<h4 id="Training">Training<a class="anchor-link" href="#Training">&#182;</a></h4><p>Although there is no training phase for KNNs, this phase is used to set up data structures to speed up the prediction phase.</p>
+<h4 id="Prediction">Prediction<a class="anchor-link" href="#Prediction">&#182;</a></h4><p>To assign a class to a new data point, we calculate the distance of the data point to all the other points. Then k points with min distance are chosen to new point. Then the resulting class of the new data point is calcualted based on the max num of class of other k-near points.</p>
+<h4 id="Hyper-parameters">Hyper parameters<a class="anchor-link" href="#Hyper-parameters">&#182;</a></h4><p>One of the initial step is setting up parameters. The most important parameter for the model is how many datapoint we want to look at locally for making a prediction. This parameter is called K. This parameter determines the performance and computational cost of the algorithm. If K is chosen small, the model may not generalize well and hence accuracy may be low. If we choose K higher, the accuracy should generally increase but it becomes more computationally expensive.</p>
+<h4 id="Distance">Distance<a class="anchor-link" href="#Distance">&#182;</a></h4><p>In the discussion above we did not define the meaning of distance amoung the data points. A function has to be defined as the distance function between datapoints. If the features are all numerical, distance function be simple euclidian distance between the points. In case some features are strings, we may need to define distance based on the either num of characters, amount of difference in two strings or perhaps based on semantics of the words. There are other distance has to be used in domain-specific case like distance between two genomes may be the number of neucletides it differ etc.</p>
 
 </div>
 </div>
