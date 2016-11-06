@@ -52,7 +52,7 @@ class LearningAgent(Agent):
         super(LearningAgent, self).__init__(env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
-        # TODO: Initialize any additional variables here
+        # Initialize any additional variables here
         self.qMap = QMap()
         self.alpha = 0.1
         self.gamma = 0.8
@@ -66,7 +66,7 @@ class LearningAgent(Agent):
     
     def reset(self, destination=None):
         self.planner.route_to(destination)
-        # TODO: Prepare for a new trip; reset any variables here, if required
+        # Prepare for a new trip; reset any variables here, if required
         self.stats.reset()
 
     def update(self, t):
@@ -75,10 +75,10 @@ class LearningAgent(Agent):
         inputs = self.env.sense(self)
         deadline = self.env.get_deadline(self)
 
-        # TODO: Update state
+        # Update state
         self.state = (self.next_waypoint,inputs['light'], inputs['oncoming'], inputs['left'])
         
-        # TODO: Select action according to your policy
+        # Select action according to your policy
         #action = random.choice([None, 'forward', 'left', 'right'])
         #action = self.next_waypoint
         action = self.qMap.getMaxQAction(self.state)
@@ -90,16 +90,17 @@ class LearningAgent(Agent):
         self.stats.lastDeadLineVal  = deadline
         if reward == -1:
             self.stats.cntNegreward += 1
+            print 'Recieved Neg Reward !!'
 
-        # TODO: Learn policy based on state, action, reward
+        # Learn policy based on state, action, reward
         nextInputs = self.env.sense(self)
         nextWaypoint = self.planner.next_waypoint()
-        nextState = (nextWaypoint, nextInputs['light'], nextInputs['oncoming']) 
+        nextState = (nextWaypoint, nextInputs['light'], nextInputs['oncoming'], nextInputs['left']) 
         qValNew = (1 - self.alpha) * self.qMap.getQValue(self.state, action) +\
                         self.alpha * (reward + self.gamma * self.qMap.getMaxQVal(nextState))
         self.qMap.setQValue(self.state, action, qValNew)
 
-        #print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, nextInput = {} reward = {}, nextwaypoint = {}".format(deadline, inputs, action, nextState, reward, self.next_waypoint)  # [debug]
+        print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, nextInput = {} reward = {}, nextwaypoint = {}".format(deadline, inputs, action, nextState, reward, self.next_waypoint)  # [debug]
 
 def run():
     """Run the agent for a finite number of trials."""
